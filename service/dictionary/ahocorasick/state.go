@@ -26,9 +26,9 @@ type State struct {
 func NewState() *State {
 	return &State{
 		depth:   0,
-		failure: new(State),
-		emits:   gset.NewIntSet(true),
-		success: gmap.NewTreeMap(gutil.ComparatorString, true),
+		failure: nil,
+		emits:   nil,
+		success: nil,
 		index:   0,
 	}
 }
@@ -37,9 +37,9 @@ func NewState() *State {
 func NewState2(depth int) *State {
 	return &State{
 		depth:   depth,
-		failure: NewState(),
-		emits:   gset.NewIntSet(true),
-		success: gmap.NewTreeMap(gutil.ComparatorString, true),
+		failure: nil,
+		emits:   nil,
+		success: nil,
 		index:   0,
 	}
 }
@@ -64,12 +64,11 @@ func (s *State) GetLargestValueId() int {
 	}
 
 	max := 0
-	s.emits.Iterator(func(v int) bool {
+	for _, v := range s.emits.Slice() {
 		if v > max {
 			max = v
 		}
-		return true
-	})
+	}
 
 	return max
 }
@@ -111,6 +110,9 @@ func (s *State) setFailure(failState *State, fail []int) {
 // character 希望按此字符转移
 // ignoreRootState 是否忽略根节点，如果是根节点自己调用则应该是true，否则为false
 func (s *State) NextState(character Char, ignoreRootState bool) *State {
+	if s.success == nil {
+		s.success = gmap.NewTreeMap(gutil.ComparatorString, true)
+	}
 	nextState := s.success.Get(character)
 	if !ignoreRootState && nextState == nil && s.depth == 0 {
 		nextState = s
@@ -137,6 +139,9 @@ func (s *State) AddState(character Char) *State {
 	nextState := s.NextStateIgnoreRootState(character)
 	if nextState == nil {
 		nextState = NewState2(s.depth + 1)
+		if s.success == nil {
+			s.success = gmap.NewTreeMap(gutil.ComparatorString, true)
+		}
 		s.success.Set(character, nextState)
 	}
 	return nextState
@@ -171,7 +176,7 @@ func (s *State) ToString() string {
 
 // 获取goto表
 func (s *State) GetSuccess() gmap.TreeMap {
-	return *s.success
+	return *(s.success)
 }
 
 func (s *State) SetIndex(index int) {

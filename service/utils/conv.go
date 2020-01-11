@@ -78,8 +78,8 @@ func MapToMapEntrySet(input interface{}) []EntrySet {
 	output := []EntrySet{}
 	for i, l := 0, v.Len(); i < l; i++ {
 		tmp := EntrySet{}
-		tmp.SetKey(keys[i].Interface())
-		tmp.SetValue(v.MapIndex(keys[i]).Interface())
+		k := keys[i].Interface()
+		tmp.Set(k, v.MapIndex(keys[i]).Interface())
 		output = append(output, tmp)
 	}
 	return output

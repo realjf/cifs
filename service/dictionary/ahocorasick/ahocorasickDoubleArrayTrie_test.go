@@ -19,8 +19,8 @@ func TestNewAhoCorasickDoubleArrayTrie(t *testing.T) {
 	for _, d := range fileData {
 		gMap.Set(d, d)
 	}
-	t.Log(gMap.Values())
+	//t.Log(gMap.Values())
 	trie.Build(*gMap)
-	t.Fatal(trie)
+	t.Fatal(1)
 }
 

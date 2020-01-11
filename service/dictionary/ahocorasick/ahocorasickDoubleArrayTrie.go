@@ -15,6 +15,7 @@ type AhoCorasickDoubleArrayTrie struct {
 func NewAhoCorasickDoubleArrayTrie() *AhoCorasickDoubleArrayTrie {
 	return &AhoCorasickDoubleArrayTrie{
 		Builder{
+			rootState:NewState(),
 			used: []bool{},
 			check: []int{},
 			base: []int{},

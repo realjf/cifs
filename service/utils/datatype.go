@@ -157,19 +157,21 @@ func (s *MapEntrySet) SetValue(value interface{}) {
 
 type EntrySet map[interface{}]interface{}
 
-func (s *EntrySet) GetKey() interface{} {
-	return (*s)["key"]
+func (s EntrySet) GetKey() interface{} {
+	for k, _ := range s {
+		return k
+	}
+	return nil
 }
 
-func (s *EntrySet) GetValue() interface{} {
-	return (*s)["value"]
+func (s EntrySet) GetValue() interface{} {
+	for _, v := range s {
+		return v
+	}
+	return nil
 }
 
-func (s *EntrySet) SetKey(key interface{}) {
-	(*s)["key"] = key
-}
-
-func (s *EntrySet) SetValue(value interface{}) {
-	(*s)["value"] = value
+func (s EntrySet) Set(key interface{}, value interface{}) {
+	s[key] = value
 }
 

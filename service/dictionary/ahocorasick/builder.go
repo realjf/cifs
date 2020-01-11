@@ -1,7 +1,6 @@
 package ahocorasick
 
 import (
-	"asifs/service/utils"
 	. "asifs/service/utils"
 	"github.com/gogf/gf/container/garray"
 	"github.com/gogf/gf/container/gmap"
@@ -36,10 +35,10 @@ func (b *Builder) Build(ma gmap.TreeMap) {
 	b.addAllKeyword(keySet)
 	// 在二分trie树的基础上构建双数组trie树
 	b.buildDoubleArrayTrie(keySet)
-	b.used = nil
+	b.used = []bool{}
 	// 构建failure表并且合并output表
 	b.constructFailureStates()
-	b.rootState = nil
+	b.rootState = NewState()
 }
 
 /**
@@ -129,8 +128,8 @@ func (b *Builder) buildDoubleArrayTrie(keySet []interface{}) {
 
 	root_node := b.rootState
 	siblings := garray.New(true)
-	b.fetch(*root_node, siblings)
-	b.insert(*siblings)
+	b.fetch(root_node, siblings)
+	b.insert(siblings)
 }
 
 /**
@@ -162,10 +161,11 @@ func (b *Builder) resize(newSize int) int {
  * @param siblings 等待插入的兄弟节点
  * @return 插入位置
  */
-func (b *Builder) insert(siblings garray.Array) int {
+func (b *Builder) insert(siblings *garray.Array) int {
 	begin := 0
 	ss := siblings.Get(0).(EntrySet)
-	var pos int = gconv.Int(math.Max(float64(ss.GetKey().(int)+1), float64(b.nextCheckPos)) - 1)
+	ssKey := ss.GetKey().(int)
+	var pos int = gconv.Int(math.Max(float64(ssKey+1), float64(b.nextCheckPos)) - 1)
 	nonzero_num := 0
 	first := 0
 
@@ -237,15 +237,16 @@ outer:
 	for _, entry := range siblings.Slice() {
 		entrySet := entry.(EntrySet)
 		new_siblings := garray.New(true)
-		if b.fetch(entrySet.GetValue().(State), new_siblings) == 0 { // 一个词的终止且不为其他词的前缀，其实就是叶子节点
-			en := entrySet.GetValue().(State)
+		eValue := entrySet.GetValue().(*State)
+		if b.fetch(eValue, new_siblings) == 0 { // 一个词的终止且不为其他词的前缀，其实就是叶子节点
+			en := entrySet.GetValue().(*State)
 			b.base[begin+entrySet.GetKey().(int)] = (-en.GetLargestValueId() - 1)
 			b.progress++
 		} else {
-			h := b.insert(*new_siblings)
+			h := b.insert(new_siblings)
 			b.base[begin+entrySet.GetKey().(int)] = h
 		}
-		en := entrySet.GetValue().(State)
+		en := entrySet.GetValue().(*State)
 		en.SetIndex(begin + entrySet.GetKey().(int))
 	}
 
@@ -265,17 +266,19 @@ func (b *Builder) loseWeight() {
 	b.check = nCheck
 }
 
-func (b *Builder) fetch(pp State, siblings *garray.Array) int {
-	var parent *State = &pp
+func (b *Builder) fetch(parent *State, siblings *garray.Array) int {
 	if parent.IsAcceptable() {
 		fakeNode := NewState2(parent.GetDepth() + 1)
 		fakeNode.AddEmit(parent.GetLargestValueId())
-		siblings.PushLeft(EntrySet{0: fakeNode})
+		eSet := EntrySet{0: fakeNode}
+		siblings.PushLeft(eSet)
 	}
 	sets := parent.GetSuccess()
 	entrySets := sets.Map()
-	for _, entry := range utils.MapToMapEntrySet(entrySets) {
-		siblings.PushLeft(EntrySet{entry.GetKey().(int) + 1: entry.GetValue()})
+	for k, v := range entrySets {
+		esetKey := k.(Char)
+		eSet := EntrySet{esetKey.ToInt() + 1: v}
+		siblings.PushLeft(eSet)
 	}
 	return siblings.Len()
 }
