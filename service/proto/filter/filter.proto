@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package filter;
+
+service FilterService {
+    rpc StopWord(Request) returns (Response) {}
+    rpc SensitiveWord(Request) returns (Response) {}
+}
+
+message Request {
+    string content = 1;
+}
+
+message Response {
+    int32 code = 1;
+    string message = 2;
+    Result result = 3;
+}
+
+message Result {
+    string origin_content = 1;
+    string filtered_content = 2;
+}

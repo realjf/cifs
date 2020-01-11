@@ -1,0 +1,15 @@
+{
+  "mysql": {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "password": "neyo123",
+    "username": "root",
+    "charset": "utf8",
+    "dbName": "",
+    "maxOpenConns": 6
+  },
+  "redis": {
+    "host": "127.0.0.1",
+    "port": 6379
+  }
+}
