@@ -10,5 +10,6 @@ require (
 	github.com/golang/protobuf v1.3.2
 	github.com/onsi/ginkgo v1.11.0 // indirect
 	github.com/onsi/gomega v1.8.1 // indirect
+	github.com/yanyiwu/gojieba v1.1.0 // indirect
 	google.golang.org/grpc v1.26.0
 )

@@ -6,6 +6,7 @@ import (
 	. "asifs/service/utils"
 	"github.com/gogf/gf/container/glist"
 	"github.com/gogf/gf/container/gmap"
+	"log"
 )
 
 type AhoCorasickDoubleArrayTrie struct {
@@ -47,6 +48,10 @@ func (a *AhoCorasickDoubleArrayTrie) ParseText(text string) *glist.List {
 	textStr := String(text).ToCharArray()
 	for i := 0; i < len(textStr); i++ {
 		currentState = a.GetState(currentState, textStr[i])
+		log.Printf("%v", currentState)
+		if currentState == -1 {
+			break
+		}
 		a.StoreEmits(position, currentState, collectedEmits)
 		position++
 	}
@@ -56,6 +61,7 @@ func (a *AhoCorasickDoubleArrayTrie) ParseText(text string) *glist.List {
 // 保存输出
 func (a *AhoCorasickDoubleArrayTrie) StoreEmits(position int, currentState int, collectedEmits *glist.List) {
 	var hitArray []int = a.output[currentState]
+	log.Printf("%v", hitArray)
 	if hitArray != nil {
 		for _, hit := range hitArray {
 			collectedEmits.PushBack(NewHit(position-a.l[hit], position, a.v[hit]))
@@ -140,10 +146,24 @@ func (a *AhoCorasickDoubleArrayTrie) Save(out io.DataOutputStream) {
 	}
 }
 
+/**
+ * 持久化
+ *
+ * @param out 一个ObjectOutputStream
+ * @throws IOException 可能的IO异常
+ */
 func (a *AhoCorasickDoubleArrayTrie) Save2() {
 
 }
 
+/**
+ * 载入
+ *
+ * @param in    一个ObjectInputStream
+ * @param value 值（持久化的时候并没有持久化值，现在需要额外提供）
+ * @throws IOException
+ * @throws ClassNotFoundException
+ */
 func (a *AhoCorasickDoubleArrayTrie) Load() {
 
 }

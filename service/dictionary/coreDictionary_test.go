@@ -1,25 +1,31 @@
 package dictionary
 
 import (
+	"asifs/service/dictionary/ahocorasick"
 	"testing"
 )
 
 func TestNewCoreDictionary(t *testing.T) {
-	path := "../../data/dictionary/tc/s2t.txt"
+	path := "../../data/dictionary/tc/t2s.txt"
 
 	dict := NewCoreDictionary()
 	t.Log(dict.Load(path))
 	t.Log(dict.Length())
 
 	// clear
-	dict.Clear()
-	t.Log(dict.Length())
+	//dict.Clear()
+	//t.Log(dict.Length())
+	//
+	//path = "../../data/dictionary/tc/t2s.txt"
+	//t.Log(dict.Load(path))
+	//t.Log(dict.Length())
 
-	path = "../../data/dictionary/tc/t2s.txt"
-	t.Log(dict.Load(path))
-	t.Log(dict.Length())
-
-	t.Log(dict.dict.ParseText("你好"))
+	hits := dict.dict.ParseText("㩵我只是")
+	for _, hit := range hits.FrontAll() {
+		h := hit.(*ahocorasick.Hit)
+		t.Logf("[%d:%d]=%s\n", h.Begin(), h.End(), h.Value())
+	}
+	t.Log()
 
 	t.Fatal(1)
 }

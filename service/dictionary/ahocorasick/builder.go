@@ -70,9 +70,9 @@ func (b *Builder) addAllKeyword(keywordSet []interface{}) {
  * 建立failure表
  */
 func (b *Builder) constructFailureStates() {
-	b.fail = make([]int, b.size+65535)
+	b.fail = make([]int, b.size+65535 * 32)
 	b.fail[1] = b.base[0]
-	b.output = make([][]int, b.size+65535)
+	b.output = make([][]int, b.size+65535 * 32)
 	queue := gqueue.New()
 	// 第一步，将深度为1的节点的failure设为根节点
 	for _, depthOneState := range b.rootState.GetStates() {

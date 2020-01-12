@@ -33,6 +33,18 @@ func NewHit(begin int, end int, value interface{}) *Hit {
 	}
 }
 
+func (h *Hit) Begin() int {
+	return h.begin
+}
+
+func (h *Hit) End() int {
+	return h.end
+}
+
+func (h *Hit) Value() interface{} {
+	return h.value
+}
+
 func (h *Hit) Hit(begin int, end int, value interface{}) {
 	h.begin = begin
 	h.end = end

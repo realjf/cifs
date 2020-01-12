@@ -73,7 +73,7 @@ func (cd *CoreDictionary) load(files []string, separator string) error {
 			if k == "" {
 				continue
 			}
-			value := strings.Split(string(k), separator)
+			value := strings.Split(k, separator)
 			if len(value) >= 2 {
 				cd.data.Set(value[0], value[1])
 			}else{
@@ -125,7 +125,7 @@ func (cd *CoreDictionary) LoadDir(dirPath string, separator string) error {
 		sensitiveWords := strings.Split(string(fileData), "\n")
 
 		for _, kw := range sensitiveWords {
-			value := strings.Split(string(kw), separator)
+			value := strings.Split(kw, separator)
 			if len(value) >= 2 {
 				cd.data.Set(value[0], value[1])
 			}else{
@@ -157,7 +157,7 @@ func (cd *CoreDictionary) LoadFiles(files []string, separator string) error {
 		}
 		keywords := strings.Split(string(fileData), "\n")
 		for _, kw := range keywords {
-			value := strings.Split(string(kw), separator)
+			value := strings.Split(kw, separator)
 			if len(value) >= 2 {
 				cd.data.Set(value[0], value[1])
 			}else{

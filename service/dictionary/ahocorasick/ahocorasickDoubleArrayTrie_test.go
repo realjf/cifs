@@ -24,7 +24,7 @@ func TestNewAhoCorasickDoubleArrayTrie(t *testing.T) {
 	trie.Build(*gMap)
 
 	t.Log(trie.ExactMatchSearch("击破"))
-	hits := trie.ParseText("机")
+	hits := trie.ParseText("机票")
 	for _, hit := range hits.FrontAll() {
 		h := hit.(*Hit)
 		t.Log(h.ToString())
