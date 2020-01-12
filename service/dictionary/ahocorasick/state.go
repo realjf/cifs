@@ -147,7 +147,7 @@ func (s *State) AddState(character Char) *State {
 }
 
 func (s *State) GetStates() []*State {
-	values := s.success.Values()
+	values := s.success.Map()
 
 	newValues := []*State{}
 	for _, v := range values {
