@@ -13,4 +13,10 @@ http:
 rpc:
 	go run rpc_server.go
 
+buildhttp:
+# -m 打印逃逸分析的优化策略，-l 禁用函数内联
+	go build -gcflags '-m -l' http_server.go
+
+buildrpc:
+	go build -gcflags '-m -l' rpc_server.go
 
