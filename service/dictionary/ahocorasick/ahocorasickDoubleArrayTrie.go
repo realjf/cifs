@@ -40,16 +40,17 @@ func NewAhoCorasickDoubleArrayTrie2(dictionary gmap.TreeMap) *AhoCorasickDoubleA
  * @param text 一些文本
  * @return 一个pair列表
  */
-func (a *AhoCorasickDoubleArrayTrie) ParseText(text string) glist.List {
+func (a *AhoCorasickDoubleArrayTrie) ParseText(text string) *glist.List {
 	var position int = 1
 	var currentState int = 0
 	collectedEmits := glist.New(true)
-	for i := 0; i < len(text); i++ {
-		currentState = a.GetState(currentState, []Char(text)[i])
+	textStr := String(text).ToCharArray()
+	for i := 0; i < len(textStr); i++ {
+		currentState = a.GetState(currentState, textStr[i])
 		a.StoreEmits(position, currentState, collectedEmits)
 		position++
 	}
-	return *collectedEmits
+	return collectedEmits
 }
 
 // 保存输出
@@ -89,6 +90,22 @@ func (a *AhoCorasickDoubleArrayTrie) ParseText3(text []Char, processor IHit) {
 		if hitArray != nil {
 			for _, hit := range hitArray {
 				processor.Hit(position-a.l[hit], position, a.v[hit])
+			}
+		}
+		position++
+	}
+}
+
+// 处理文本
+func (a *AhoCorasickDoubleArrayTrie) ParseText4(text []Char, processor IHitFull) {
+	var position int = 1
+	var currentState int = 0
+	for _, c := range text {
+		currentState = a.GetState(currentState, c)
+		var hitArray []int = a.output[currentState]
+		if hitArray != nil {
+			for _, hit := range hitArray {
+				processor.Hit(position-a.l[hit], position, a.v[hit], hit)
 			}
 		}
 		position++

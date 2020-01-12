@@ -2,7 +2,6 @@ package ahocorasick
 
 import (
 	. "asifs/service/utils"
-	"github.com/gogf/gf/container/garray"
 	"github.com/gogf/gf/container/gmap"
 	"github.com/gogf/gf/container/gqueue"
 	"github.com/gogf/gf/util/gconv"
@@ -35,10 +34,11 @@ func (b *Builder) Build(ma gmap.TreeMap) {
 	b.addAllKeyword(keySet)
 	// 在二分trie树的基础上构建双数组trie树
 	b.buildDoubleArrayTrie(keySet)
-	b.used = []bool{}
+	b.used = nil
 	// 构建failure表并且合并output表
 	b.constructFailureStates()
-	b.rootState = NewState()
+	b.rootState = nil
+	b.loseWeight()
 }
 
 /**
@@ -48,11 +48,10 @@ func (b *Builder) Build(ma gmap.TreeMap) {
  * @param index   值的下标
  */
 func (b *Builder) addKeyword(keyword String, index int) {
-	currentState := b.rootState
 	for _, character := range keyword.ToCharArray() {
-		currentState = currentState.AddState(character)
+		b.rootState.AddState(character)
 	}
-	currentState.AddEmit(index)
+	b.rootState.AddEmit(index)
 	b.l[index] = keyword.Length()
 }
 
@@ -73,7 +72,6 @@ func (b *Builder) constructFailureStates() {
 	b.fail[1] = b.base[0]
 	b.output = make([][]int, b.size+1)
 	queue := gqueue.New()
-
 	// 第一步，将深度为1的节点的failure设为根节点
 	for _, depthOneState := range b.rootState.GetStates() {
 		depthOneState.setFailure(b.rootState, b.fail)
@@ -126,9 +124,8 @@ func (b *Builder) buildDoubleArrayTrie(keySet []interface{}) {
 	b.base[0] = 1
 	b.nextCheckPos = 0
 
-	root_node := b.rootState
-	siblings := garray.New(true)
-	b.fetch(root_node, siblings)
+	siblings := gmap.NewListMap(true)
+	b.fetch(b.rootState, siblings)
 	b.insert(siblings)
 }
 
@@ -161,7 +158,7 @@ func (b *Builder) resize(newSize int) int {
  * @param siblings 等待插入的兄弟节点
  * @return 插入位置
  */
-func (b *Builder) insert(siblings *garray.Array) int {
+func (b *Builder) insert(siblings *gmap.ListMap) int {
 	begin := 0
 	ss := siblings.Get(0).(EntrySet)
 	ssKey := ss.GetKey().(int)
@@ -192,7 +189,7 @@ outer:
 		// 当前位置离第一个兄弟节点的距离
 		ss := siblings.Get(0).(EntrySet)
 		begin = pos - ss.GetKey().(int)
-		bb := siblings.Get(siblings.Len()-1).(EntrySet)
+		bb := siblings.Get(siblings.Size()-1).(EntrySet)
 		if b.allocSize <= (begin + bb.GetKey().(int)) {
 			var l float64
 			if 1.05 > 1.0*float64(b.keySize)/float64(b.progress+1) {
@@ -207,7 +204,7 @@ outer:
 			continue
 		}
 
-		for i := 1; i < siblings.Len(); i++ {
+		for i := 1; i < siblings.Size(); i++ {
 			sb := siblings.Get(i).(EntrySet)
 			if b.check[begin+sb.GetKey().(int)] != 0 {
 				continue outer
@@ -221,29 +218,27 @@ outer:
 	}
 	b.used[begin] = true
 
-	sb := siblings.Get(siblings.Len()-1).(EntrySet)
-	if b.size > begin+sb.GetKey().(int)+1 {
-		b.size = b.size
-	} else {
-		sc := siblings.Get(siblings.Len()-1).(EntrySet)
+	sb := siblings.Get(siblings.Size()-1).(EntrySet)
+	if b.size <= begin+sb.GetKey().(int)+1 {
+		sc := siblings.Get(siblings.Size()-1).(EntrySet)
 		b.size = begin + sc.GetKey().(int) + 1
 	}
 
-	for _, entry := range siblings.Slice() {
+	for _, entry := range siblings.Values() {
 		entrySet := entry.(EntrySet)
 		b.check[begin+entrySet.GetKey().(int)] = begin
 	}
 
-	for _, entry := range siblings.Slice() {
+	for _, entry := range siblings.Values() {
 		entrySet := entry.(EntrySet)
-		new_siblings := garray.New(true)
+		newSiblings := gmap.NewListMap(true)
 		eValue := entrySet.GetValue().(*State)
-		if b.fetch(eValue, new_siblings) == 0 { // 一个词的终止且不为其他词的前缀，其实就是叶子节点
+		if b.fetch(eValue, newSiblings) == 0 { // 一个词的终止且不为其他词的前缀，其实就是叶子节点
 			en := entrySet.GetValue().(*State)
 			b.base[begin+entrySet.GetKey().(int)] = (-en.GetLargestValueId() - 1)
 			b.progress++
 		} else {
-			h := b.insert(new_siblings)
+			h := b.insert(newSiblings)
 			b.base[begin+entrySet.GetKey().(int)] = h
 		}
 		en := entrySet.GetValue().(*State)
@@ -266,19 +261,19 @@ func (b *Builder) loseWeight() {
 	b.check = nCheck
 }
 
-func (b *Builder) fetch(parent *State, siblings *garray.Array) int {
+func (b *Builder) fetch(parent *State, siblings *gmap.ListMap) int {
 	if parent.IsAcceptable() {
 		fakeNode := NewState2(parent.GetDepth() + 1)
 		fakeNode.AddEmit(parent.GetLargestValueId())
 		eSet := EntrySet{0: fakeNode}
-		siblings.PushLeft(eSet)
+		siblings.Set(0, eSet)
 	}
-	sets := parent.GetSuccess()
-	entrySets := sets.Map()
-	for k, v := range entrySets {
-		esetKey := k.(Char)
-		eSet := EntrySet{esetKey.ToInt() + 1: v}
-		siblings.PushLeft(eSet)
+
+	index := 0
+	for k, v := range parent.GetSuccess() {
+		eSetKey := k.(Char)
+		eSet := EntrySet{eSetKey.ToInt() + 1: v.(*State)}
+		siblings.Set(index, eSet)
 	}
-	return siblings.Len()
+	return siblings.Size()
 }

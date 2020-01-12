@@ -6,20 +6,20 @@ import (
 )
 
 func TestNewState(t *testing.T) {
-	state := NewState2(1)
-	t.Log(state.ToString())
-	state.AddEmit(2)
-	t.Log(state.ToString())
-	state.AddState(Char('b'))
-	t.Log(state.AddState(Char('c')))
-	t.Log(state.ToString())
-	state.NextState(Char('a'), true)
-	t.Log(state.ToString())
-	t.Log(state.GetStates())
-	t.Log(state.GetDepth())
-	t.Log(state.GetTransitions())
-	t.Log(state.GetIndex())
+	state := NewState()
+	s := "我净额哦啊牛而紧迫我安全金融IE就温柔而忘记你让我去基恩人迫切而我家人聘请欧威尔"
+	ss := String(s).ToCharArray()
+	for _, st := range ss {
+		state.AddState(st)
+	}
 	t.Log(state.GetSuccess())
-	t.Log(state.GetLargestValueId())
-	t.Fatal(state)
+	t.Log(state.GetDepth())
+	keys := state.GetTransitions()
+	kks := []string{}
+	for _, k := range keys {
+		kks = append(kks, k.ToString())
+	}
+	t.Log(kks)
+	t.Log()
+	t.Fatalf("%v", state)
 }

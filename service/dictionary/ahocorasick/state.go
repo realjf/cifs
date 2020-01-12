@@ -28,7 +28,7 @@ func NewState() *State {
 		depth:   0,
 		failure: nil,
 		emits:   nil,
-		success: nil,
+		success: gmap.NewTreeMap(gutil.ComparatorString, true),
 		index:   0,
 	}
 }
@@ -39,7 +39,7 @@ func NewState2(depth int) *State {
 		depth:   depth,
 		failure: nil,
 		emits:   nil,
-		success: nil,
+		success: gmap.NewTreeMap(gutil.ComparatorString, true),
 		index:   0,
 	}
 }
@@ -118,11 +118,10 @@ func (s *State) NextState(character Char, ignoreRootState bool) *State {
 		nextState = s
 	}
 
-	if ns, ok := nextState.(*State); ok {
-		return ns
-	} else {
+	if nextState == nil {
 		return nil
 	}
+	return nextState.(*State)
 }
 
 // 按照character转移，根节点转移失败会返回自己（永远不会返回null）
@@ -170,13 +169,19 @@ func (s *State) GetTransitions() []Char {
 
 func (s *State) ToString() string {
 
-	return fmt.Sprintf("State{depth=%d, ID=%d, emits=%v, success=%v, failureID=%d, failure=%v}",
-		s.depth, s.index, s.emits, s.success.String(), s.failure.index, s.failure)
+	return fmt.Sprintf(
+		"State{depth=%d, ID=%d, emits=%v, success=%v, failureID=%d, failure=%v}",
+		s.depth,
+		s.index,
+		s.emits,
+		s.success.String(),
+		s.failure.index,
+		s.failure)
 }
 
 // 获取goto表
-func (s *State) GetSuccess() gmap.TreeMap {
-	return *(s.success)
+func (s *State) GetSuccess() map[interface{}]interface{} {
+	return s.success.Map()
 }
 
 func (s *State) SetIndex(index int) {
