@@ -27,7 +27,7 @@ func NewState() *State {
 	return &State{
 		depth:   0,
 		failure: nil,
-		emits:   nil,
+		emits:   gset.NewIntSet(true),
 		success: gmap.NewTreeMap(gutil.ComparatorString, true),
 		index:   0,
 	}
@@ -38,7 +38,7 @@ func NewState2(depth int) *State {
 	return &State{
 		depth:   depth,
 		failure: nil,
-		emits:   nil,
+		emits:   gset.NewIntSet(true),
 		success: gmap.NewTreeMap(gutil.ComparatorString, true),
 		index:   0,
 	}
@@ -74,11 +74,13 @@ func (s *State) GetLargestValueId() int {
 }
 
 // 添加一些匹配到的模式串
-func (s *State) AddEmit2(emits gset.IntSet) {
-	emits.Iterator(func(v int) bool {
+func (s *State) AddEmit2(emits *gset.IntSet) {
+	for _, v := range emits.Slice() {
+		if s.emits == nil {
+			s.emits = gset.NewIntSet(true)
+		}
 		s.AddEmit(v)
-		return true
-	})
+	}
 }
 
 // 获取这个节点代表的模式串

@@ -229,12 +229,12 @@ func (a *AhoCorasickDoubleArrayTrie) Get2(index int) interface{} {
 }
 
 func (a *AhoCorasickDoubleArrayTrie) GetState(currentState int, character Char) int {
-	var newCurrentState int = a.TransitionWithRoot(currentState, character)
-	for newCurrentState == -1 {
+	var newCurrentState int = a.TransitionWithRoot(currentState, character) // 先按success跳转
+	for newCurrentState == -1 { // 跳转失败的话，按failure跳转
 		currentState = a.fail[currentState]
 		newCurrentState = a.TransitionWithRoot(currentState, character)
 	}
-	return currentState
+	return newCurrentState
 }
 
 /**

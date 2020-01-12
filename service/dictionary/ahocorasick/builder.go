@@ -51,7 +51,7 @@ func (b *Builder) Build(ma gmap.TreeMap) {
 func (b *Builder) addKeyword(keyword String, index int) {
 	currentState := b.rootState
 	for _, character := range keyword.ToCharArray() {
-		currentState = b.rootState.AddState(character)
+		currentState = currentState.AddState(character)
 	}
 	currentState.AddEmit(index)
 	b.l[index] = keyword.Length()
@@ -78,7 +78,7 @@ func (b *Builder) constructFailureStates() {
 	for _, depthOneState := range b.rootState.GetStates() {
 		depthOneState.setFailure(b.rootState, b.fail)
 		queue.Push(depthOneState)
-		b.constructOutput(*depthOneState)
+		b.constructOutput(depthOneState)
 	}
 
 	// 第二步，为深度 > 1 的节点建立failure表，这是一个bfs
@@ -94,8 +94,8 @@ func (b *Builder) constructFailureStates() {
 			}
 			newFailureState := traceFailureState.NextState2(transition)
 			targetState.setFailure(newFailureState, b.fail)
-			targetState.AddEmit2(*newFailureState.Emit())
-			b.constructOutput(*targetState)
+			targetState.AddEmit2(newFailureState.Emit())
+			b.constructOutput(targetState)
 		}
 	}
 }
@@ -103,7 +103,7 @@ func (b *Builder) constructFailureStates() {
 /**
  * 建立output表
  */
-func (b *Builder) constructOutput(target State) {
+func (b *Builder) constructOutput(target *State) {
 	emit := target.Emit()
 	if emit == nil || emit.Size() == 0 {
 		return
