@@ -1,7 +1,7 @@
 package ahocorasick
 
 import (
-	. "asifs/service/utils"
+	. "cifs/service/utils"
 	"fmt"
 	"strings"
 	"testing"

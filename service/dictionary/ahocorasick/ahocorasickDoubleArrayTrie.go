@@ -1,9 +1,9 @@
 package ahocorasick
 
 import (
-	ByteArray "asifs/service/dictionary/byteArray"
-	"asifs/service/dictionary/io"
-	. "asifs/service/utils"
+	ByteArray "cifs/service/dictionary/byteArray"
+	"cifs/service/dictionary/io"
+	. "cifs/service/utils"
 	"github.com/gogf/gf/container/glist"
 	"github.com/gogf/gf/container/gmap"
 	"log"

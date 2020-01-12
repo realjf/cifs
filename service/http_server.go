@@ -1,11 +1,11 @@
 package main
 
 import (
-	"asifs/service/config"
-	"asifs/service/db"
-	"asifs/service/dictionary"
-	"asifs/service/filters"
-	"asifs/service/utils"
+	"cifs/service/config"
+	"cifs/service/db"
+	"cifs/service/dictionary"
+	"cifs/service/filters"
+	"cifs/service/utils"
 	"encoding/json"
 	"log"
 	"net/http"

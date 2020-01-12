@@ -1,7 +1,7 @@
 package ahocorasick
 
 import (
-	. "asifs/service/utils"
+	. "cifs/service/utils"
 	"github.com/gogf/gf/container/garray"
 	"github.com/gogf/gf/container/gmap"
 	"github.com/gogf/gf/container/gqueue"

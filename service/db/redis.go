@@ -2,7 +2,7 @@ package db
 
 
 import (
-	"asifs/service/config"
+	"cifs/service/config"
 	"fmt"
 	"github.com/go-redis/redis"
 )

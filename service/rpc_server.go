@@ -1,10 +1,10 @@
 package main
 
 import (
-	"asifs/service/config"
-	"asifs/service/db"
-	"asifs/service/filters"
-	pb "asifs/service/proto/filter"
+	"cifs/service/config"
+	"cifs/service/db"
+	"cifs/service/filters"
+	pb "cifs/service/proto/filter"
 	"google.golang.org/grpc"
 	"log"
 	"net"

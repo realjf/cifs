@@ -1,7 +1,7 @@
 package dictionary
 
 import (
-	"asifs/service/utils"
+	"cifs/service/utils"
 	"github.com/gogf/gf/container/gmap"
 	"github.com/gogf/gf/util/gutil"
 )

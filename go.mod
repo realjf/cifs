@@ -1,4 +1,4 @@
-module asifs
+module cifs
 
 go 1.13
 

@@ -7,8 +7,8 @@ RUN mkdir /app
 WORKDIR /app
 
 # 将微服务的服务端运行文件拷贝到 /app 下
-ADD asifs /app/asifs
+ADD cifs /app/cifs
 
 # 运行服务端
-CMD ["./asifs"]
+CMD ["./cifs"]
 

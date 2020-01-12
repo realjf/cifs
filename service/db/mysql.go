@@ -2,7 +2,7 @@ package db
 
 
 import (
-	"asifs/service/config"
+	"cifs/service/config"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"

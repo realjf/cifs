@@ -1,8 +1,8 @@
 package byteArray
 
 import (
-	. "asifs/service/utils"
-	"asifs/service/utils/byteUtility"
+	. "cifs/service/utils"
+	"cifs/service/utils/byteUtility"
 	"github.com/gogf/gf/util/gconv"
 	"io/ioutil"
 	"log"

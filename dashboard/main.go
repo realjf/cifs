@@ -1,9 +1,9 @@
 package main
 
 import (
-	"asifs/dashboard/utils"
-	"asifs/service/config"
-	"asifs/service/db"
+	"cifs/dashboard/utils"
+	"cifs/service/config"
+	"cifs/service/db"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"

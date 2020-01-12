@@ -1,8 +1,8 @@
 package filters
 
 import (
-	pb "asifs/service/proto/filter"
-	"asifs/service/utils"
+	pb "cifs/service/proto/filter"
+	"cifs/service/utils"
 	"context"
 	"log"
 )

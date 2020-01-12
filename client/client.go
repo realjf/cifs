@@ -1,7 +1,7 @@
 package main
 
 import (
-	pb "asifs/service/proto/filter"
+	pb "cifs/service/proto/filter"
 	"context"
 	"google.golang.org/grpc"
 	"log"

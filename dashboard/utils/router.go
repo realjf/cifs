@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"asifs/dashboard/control"
+	"cifs/dashboard/control"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,7 +1,7 @@
 package dictionary
 
 import (
-	"asifs/service/dictionary/ahocorasick"
+	"cifs/service/dictionary/ahocorasick"
 	"errors"
 	"fmt"
 	"github.com/gogf/gf/container/gmap"
