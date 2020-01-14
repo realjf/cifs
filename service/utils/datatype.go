@@ -17,6 +17,8 @@ type String string
 
 type Rune rune
 
+type Text []byte
+
 
 func NewString() String {
 	return String("")

@@ -1,5 +1,9 @@
 package utils
 
+import (
+	"unicode"
+	"unicode/utf8"
+)
 
 const (
 	// ascii 表中可见字符从!开始，偏移位置为33
@@ -85,4 +89,53 @@ func D2SConvertChar(src Char) string {
 		r = DBC_SPACE
 	}
 	return Char(r).ToString()
+}
+
+// 将文本划分成字元
+func SplitTextToWords(text Text) []Text {
+	output := make([]Text, 0, len(text)/3)
+	current := 0
+	inAlphanumeric := true
+	alphanumericStart := 0
+	for current < len(text) {
+		r, size := utf8.DecodeRune(text[current:])
+		if size <= 2 && (unicode.IsLetter(r) || unicode.IsNumber(r)) {
+			// 当前是拉丁字母或数字（非中日韩文字）
+			if !inAlphanumeric {
+				alphanumericStart = current
+				inAlphanumeric = true
+			}
+		} else {
+			if inAlphanumeric {
+				inAlphanumeric = false
+				if current != 0 {
+					output = append(output, ToLower(text[alphanumericStart:current]))
+				}
+			}
+			output = append(output, text[current:current+size])
+		}
+		current += size
+	}
+
+	// 处理最后一个字元是英文的情况
+	if inAlphanumeric {
+		if current != 0 {
+			output = append(output, ToLower(text[alphanumericStart:current]))
+		}
+	}
+
+	return output
+}
+
+// 将英文词转化为小写
+func ToLower(text []byte) []byte {
+	output := make([]byte, len(text))
+	for i, t := range text {
+		if t >= 'A' && t <= 'Z' {
+			output[i] = t - 'A' + 'a'
+		} else {
+			output[i] = t
+		}
+	}
+	return output
 }

@@ -22,3 +22,9 @@ func TestD2SConvertChar(t *testing.T) {
 	var s Char = '!'
 	t.Fatal(D2SConvertChar(s), s.ToString())
 }
+
+func TestSplitTextToWords(t *testing.T) {
+	var s = "个IE就怕诶见欧派鸡皮哦进入屁哦请问加入屁哦群文件"
+	ss := SplitTextToWords([]byte(s))
+	t.Fatal(ss)
+}
