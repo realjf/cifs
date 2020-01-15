@@ -7,6 +7,7 @@ import (
 	"github.com/gogf/gf/container/gmap"
 	"github.com/gogf/gf/util/gutil"
 	"io/ioutil"
+	"log"
 	"strings"
 )
 
@@ -80,7 +81,7 @@ func (cd *CoreDictionary) load(files []string, separator string) error {
 				cd.data.Set(value[0], value[0])
 			}
 		}
-		cd.dict.Build(*cd.data)
+		cd.dict.Build(cd.data)
 		cd.separator = separator
 	}
 
@@ -133,7 +134,8 @@ func (cd *CoreDictionary) LoadDir(dirPath string, separator string) error {
 			}
 		}
 
-		cd.dict.Build(*cd.data)
+		log.Printf("%v", cd.data)
+		cd.dict.Build(cd.data)
 	}
 
 	return nil
@@ -164,7 +166,7 @@ func (cd *CoreDictionary) LoadFiles(files []string, separator string) error {
 				cd.data.Set(value[0], value[0])
 			}
 		}
-		cd.dict.Build(*cd.data)
+		cd.dict.Build(cd.data)
 	}
 
 	return nil

@@ -9,6 +9,8 @@ import (
 	"math"
 )
 
+const DEFAULT_SIZE = 65535 * 1024
+
 type Builder struct {
 	rootState    *State // 根节点，仅仅用于构建过程
 	used         []bool // 是否占用，仅仅用于构建
@@ -27,7 +29,7 @@ type Builder struct {
 	output [][]int // 输出表
 }
 
-func (b *Builder) Build(ma gmap.TreeMap) {
+func (b *Builder) Build(ma *gmap.TreeMap) {
 	b.v = ma.Values()
 	b.l = make([]int, len(b.v))
 	keySet := ma.Keys()
@@ -70,9 +72,9 @@ func (b *Builder) addAllKeyword(keywordSet []interface{}) {
  * 建立failure表
  */
 func (b *Builder) constructFailureStates() {
-	b.fail = make([]int, b.size+65535 * 32)
+	b.fail = make([]int, b.size+DEFAULT_SIZE)
 	b.fail[1] = b.base[0]
-	b.output = make([][]int, b.size+65535 * 32)
+	b.output = make([][]int, b.size+DEFAULT_SIZE)
 	queue := gqueue.New()
 	// 第一步，将深度为1的节点的failure设为根节点
 	for _, depthOneState := range b.rootState.GetStates() {
@@ -121,7 +123,7 @@ func (b *Builder) constructOutput(target *State) {
 func (b *Builder) buildDoubleArrayTrie(keySet []interface{}) {
 	b.progress = 0
 	b.keySize = len(keySet)
-	b.resize(65536 * 32)
+	b.resize(DEFAULT_SIZE)
 
 	b.base[0] = 1
 	b.nextCheckPos = 0
@@ -254,11 +256,11 @@ outer:
  * 释放空闲的内存
  */
 func (b *Builder) loseWeight() {
-	var nbase []int = make([]int, b.size+65535)
+	var nbase []int = make([]int, b.size+DEFAULT_SIZE)
 	copy(nbase, b.base)
 	b.base = nbase
 
-	var nCheck []int = make([]int, b.size+65535)
+	var nCheck []int = make([]int, b.size+DEFAULT_SIZE)
 	copy(nCheck, b.check)
 	b.check = nCheck
 }

@@ -13,7 +13,7 @@ var (
 
 func init() {
 	if RedisClient == nil {
-		Config := config.NewConfig().LoadConfig("../config/config.json")
+		Config := config.NewConfig().LoadConfig("config/config.json")
 		RedisClient = NewRedis(Config)
 	}
 }

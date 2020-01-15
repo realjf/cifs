@@ -29,7 +29,7 @@ func NewAhoCorasickDoubleArrayTrie() *AhoCorasickDoubleArrayTrie {
 	}
 }
 
-func NewAhoCorasickDoubleArrayTrie2(dictionary gmap.TreeMap) *AhoCorasickDoubleArrayTrie {
+func NewAhoCorasickDoubleArrayTrie2(dictionary *gmap.TreeMap) *AhoCorasickDoubleArrayTrie {
 	dat := NewAhoCorasickDoubleArrayTrie()
 	dat.Build(dictionary)
 	return dat
@@ -299,7 +299,7 @@ func (a *AhoCorasickDoubleArrayTrie) TransitionWithRoot(nodePos int, c Char) int
 	return p
 }
 
-func (a *AhoCorasickDoubleArrayTrie) Build(m gmap.TreeMap) {
+func (a *AhoCorasickDoubleArrayTrie) Build(m *gmap.TreeMap) {
 	a.Builder.Build(m)
 }
 

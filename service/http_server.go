@@ -5,6 +5,7 @@ import (
 	"cifs/service/db"
 	"cifs/service/dictionary"
 	"cifs/service/filters"
+	"cifs/service/segment"
 	"cifs/service/utils"
 	"encoding/json"
 	"log"
@@ -27,11 +28,13 @@ var (
 	SensitiveTable *filters.SensitiveWord
 	SimplifiedChineseDict *dictionary.SimplifiedChineseDictionary
 	SensitiveWordDict *dictionary.SensitiveWordDictionary
+
+	Segmenter *segment.Segmenter
 )
 
 func init() {
 	// config、db
-	Config = config.NewConfig().LoadConfig("./config/config.json")
+	Config = config.NewConfig().LoadConfig("config/config.json")
 	db.NewMysql(Config).Init()
 
 	// 过滤多余空格
@@ -53,7 +56,7 @@ func init() {
 
 	// 加载自定义的敏感词字典
 	SensitiveWordDict = dictionary.NewSensitiveWordDictionary()
-	err = SensitiveWordDict.LoadDir("../data/dictionary/sensitiveword/", "")
+	err = SensitiveWordDict.LoadDir("../data/dictionary/sensitiveword/", " ")
 	if err != nil {
 		log.Println(err)
 	}
@@ -71,6 +74,10 @@ func init() {
 	if err != nil {
 		log.Println(err)
 	}
+
+	// 分词词典
+	Segmenter.LoadDictionary("segment/data/dictionary.txt")
+
 }
 
 func main() {
@@ -92,7 +99,7 @@ func main() {
 type Response struct {
 	Code int `json:"code"`
 	Message string `json:"message"`
-	Result map[string]string `json:"result"`
+	Result map[string]interface{} `json:"result"`
 }
 
 func (resp *Response) ToJson() []byte {
@@ -109,7 +116,7 @@ func filter(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	content := r.Form.Get("content")
 	resp := &Response{}
-	resp.Result = map[string]string{
+	resp.Result = map[string]interface{}{
 		"original_content": content,
 	}
 	w.WriteHeader(http.StatusOK)
@@ -137,8 +144,12 @@ func filter(w http.ResponseWriter, r *http.Request) {
 	// 自定义敏感词过滤
 	content = SensitiveWordDict.Filter(content)
 
+	// 中文分词
+	segs := Segmenter.Segment([]byte(content))
+
 	resp.Code = 100
 	resp.Message = "过滤成功"
 	resp.Result["filtered_content"] = res
+	resp.Result["segs"] = segs
 	w.Write(resp.ToJson())
 }
