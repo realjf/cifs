@@ -55,8 +55,13 @@ func init() {
 	}
 
 	// 加载自定义的敏感词字典
+	//SensitiveWordDict = dictionary.NewSensitiveWordDictionary()
+	//err = SensitiveWordDict.LoadDir("../data/dictionary/sensitiveword/", " ")
+	//if err != nil {
+	//	log.Println(err)
+	//}
 	SensitiveWordDict = dictionary.NewSensitiveWordDictionary()
-	err = SensitiveWordDict.LoadDir("../data/dictionary/sensitiveword/", " ")
+	err = SensitiveWordDict.LoadWith("../data/dictionary/sensitiveword/keywords", " ")
 	if err != nil {
 		log.Println(err)
 	}

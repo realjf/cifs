@@ -7,7 +7,6 @@ import (
 	"github.com/gogf/gf/container/gmap"
 	"github.com/gogf/gf/util/gutil"
 	"io/ioutil"
-	"log"
 	"strings"
 )
 
@@ -70,6 +69,7 @@ func (cd *CoreDictionary) load(files []string, separator string) error {
 			return errors.New(fmt.Sprintf("read file %s error: %v", path, err))
 		}
 		data := strings.Split(string(fileData), "\n")
+		// gmap.TreeMap字典大小有限制
 		for _, k := range data {
 			if k == "" {
 				continue
@@ -81,9 +81,10 @@ func (cd *CoreDictionary) load(files []string, separator string) error {
 				cd.data.Set(value[0], value[0])
 			}
 		}
-		cd.dict.Build(cd.data)
-		cd.separator = separator
 	}
+
+	cd.dict.Build(cd.data)
+	cd.separator = separator
 
 	return nil
 }
@@ -133,10 +134,8 @@ func (cd *CoreDictionary) LoadDir(dirPath string, separator string) error {
 				cd.data.Set(value[0], value[0])
 			}
 		}
-
-		log.Printf("%v", cd.data)
-		cd.dict.Build(cd.data)
 	}
+	cd.dict.Build(cd.data)
 
 	return nil
 }
@@ -166,8 +165,8 @@ func (cd *CoreDictionary) LoadFiles(files []string, separator string) error {
 				cd.data.Set(value[0], value[0])
 			}
 		}
-		cd.dict.Build(cd.data)
 	}
+	cd.dict.Build(cd.data)
 
 	return nil
 }
