@@ -5,13 +5,13 @@ import (
 	"cifs/service/db"
 	"cifs/service/dictionary"
 	"cifs/service/filters"
-	"cifs/service/segment"
 	"cifs/service/utils"
 	"encoding/json"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
 	"runtime"
+	"github.com/huichen/sego"
 )
 
 
@@ -29,7 +29,7 @@ var (
 	SimplifiedChineseDict *dictionary.SimplifiedChineseDictionary
 	SensitiveWordDict *dictionary.SensitiveWordDictionary
 
-	Segmenter *segment.Segmenter
+	Segmenter *sego.Segmenter
 )
 
 func init() {
@@ -55,16 +55,16 @@ func init() {
 	}
 
 	// 加载自定义的敏感词字典
-	//SensitiveWordDict = dictionary.NewSensitiveWordDictionary()
-	//err = SensitiveWordDict.LoadDir("../data/dictionary/sensitiveword/", " ")
-	//if err != nil {
-	//	log.Println(err)
-	//}
 	SensitiveWordDict = dictionary.NewSensitiveWordDictionary()
-	err = SensitiveWordDict.LoadWith("../data/dictionary/sensitiveword/keywords", " ")
+	err = SensitiveWordDict.LoadDir("../data/dictionary/sensitiveword/", " ")
 	if err != nil {
 		log.Println(err)
 	}
+	//SensitiveWordDict = dictionary.NewSensitiveWordDictionary()
+	//err = SensitiveWordDict.LoadWith("../data/dictionary/sensitiveword/keywords", " ")
+	//if err != nil {
+	//	log.Println(err)
+	//}
 
 	// 加载繁体转简体的字典
 	SimplifiedChineseDict = dictionary.NewSimplifiedChineseDictionary()
@@ -81,7 +81,7 @@ func init() {
 	}
 
 	// 分词词典
-	Segmenter.LoadDictionary("segment/data/dictionary.txt")
+	Segmenter.LoadDictionary("../data/dictionary/dictionary.txt")
 
 }
 

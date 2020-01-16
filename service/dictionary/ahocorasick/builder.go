@@ -123,7 +123,7 @@ func (b *Builder) constructOutput(target *State) {
 func (b *Builder) buildDoubleArrayTrie(keySet []interface{}) {
 	b.progress = 0
 	b.keySize = len(keySet)
-	b.resize(DEFAULT_SIZE)
+	b.resize(65535+DEFAULT_SIZE)
 
 	b.base[0] = 1
 	b.nextCheckPos = 0
