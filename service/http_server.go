@@ -80,8 +80,8 @@ func init() {
 		log.Println(err)
 	}
 
-	// 分词词典
-	Segmenter.LoadDictionary("../data/dictionary/dictionary.txt")
+	// 分词词典，目前分词还有些问题，暂时先不处理
+	//Segmenter.LoadDictionary("../data/dictionary/dictionary.txt")
 
 }
 
@@ -150,7 +150,7 @@ func filter(w http.ResponseWriter, r *http.Request) {
 	content = SensitiveWordDict.Filter(content)
 
 	// 中文分词
-	segs := Segmenter.Segment([]byte(content))
+	//segs := Segmenter.Segment([]byte(content))
 
 	resp.Code = 100
 	resp.Message = "过滤成功"
