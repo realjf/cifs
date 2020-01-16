@@ -68,7 +68,7 @@ func init() {
 
 	// 加载繁体转简体的字典
 	SimplifiedChineseDict = dictionary.NewSimplifiedChineseDictionary()
-	file1 := "../data/dictionary/tc/繁体转简体.txt"
+	file1 := "../data/dictionary/tc/fanti2jianti.txt"
 	err = SimplifiedChineseDict.LoadWith(file1, "\t")
 	if err != nil {
 		log.Println(err)

@@ -85,7 +85,7 @@ func (cd *CoreDictionary) load(files []string, separator string) error {
 	}
 
 	log.Printf("%v", cd.data.Size())
-	cd.dict.Build(cd.data)
+	cd.dict.Build(*cd.data)
 	cd.separator = separator
 
 	return nil
@@ -138,7 +138,7 @@ func (cd *CoreDictionary) LoadDir(dirPath string, separator string) error {
 		}
 	}
 
-	cd.dict.Build(cd.data)
+	cd.dict.Build(*cd.data)
 
 	return nil
 }
@@ -169,7 +169,7 @@ func (cd *CoreDictionary) LoadFiles(files []string, separator string) error {
 			}
 		}
 	}
-	cd.dict.Build(cd.data)
+	cd.dict.Build(*cd.data)
 
 	return nil
 }

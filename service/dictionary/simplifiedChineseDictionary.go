@@ -1,6 +1,7 @@
 package dictionary
 
 import (
+	"cifs/service/dictionary/ahocorasick"
 	"cifs/service/utils"
 	"github.com/gogf/gf/container/gmap"
 	"github.com/gogf/gf/util/gutil"
@@ -16,6 +17,7 @@ func NewSimplifiedChineseDictionary() *SimplifiedChineseDictionary {
 			files: []string{},
 			separator: DefaultSeparator,
 			data: gmap.NewTreeMap(gutil.ComparatorString, true),
+			dict: ahocorasick.NewAhoCorasickDoubleArrayTrie(),
 		},
 	}
 

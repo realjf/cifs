@@ -1,6 +1,7 @@
 package dictionary
 
 import (
+	"cifs/service/dictionary/ahocorasick"
 	"github.com/gogf/gf/container/gmap"
 	"github.com/gogf/gf/util/gutil"
 )
@@ -15,6 +16,7 @@ func NewSensitiveWordDictionary() *SensitiveWordDictionary {
 			files: []string{},
 			separator: DefaultSeparator,
 			data: gmap.NewTreeMap(gutil.ComparatorString, true),
+			dict: ahocorasick.NewAhoCorasickDoubleArrayTrie(),
 		},
 	}
 

@@ -29,7 +29,7 @@ type Builder struct {
 	output [][]int // 输出表
 }
 
-func (b *Builder) Build(ma *gmap.TreeMap) {
+func (b *Builder) Build(ma gmap.TreeMap) {
 	b.v = ma.Values()
 	b.l = make([]int, len(b.v))
 	keySet := ma.Keys()
