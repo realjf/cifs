@@ -49,14 +49,14 @@ func init() {
 
 	// 加载敏感词
 	SensitiveTable = filters.NewSensitiveWord()
-	err = SensitiveTable.LoadTable("./filters/sensitiveword_table")
-	if err != nil {
-		log.Printf("failed to load sensitive word table: %v", err)
-	}
+	//err = SensitiveTable.LoadTable("./filters/sensitiveword_table")
+	//if err != nil {
+	//	log.Printf("failed to load sensitive word table: %v", err)
+	//}
 
 	// 加载自定义的敏感词字典
 	SensitiveWordDict = dictionary.NewSensitiveWordDictionary()
-	err = SensitiveWordDict.LoadDir("../data/dictionary/sensitiveword/", " ")
+	err = SensitiveWordDict.LoadWith("../data/dictionary/sensitiveword/keywords", " ")
 	if err != nil {
 		log.Println(err)
 	}
@@ -74,11 +74,11 @@ func init() {
 		log.Println(err)
 	}
 
-	file2 := "../data/dictionary/tc/t2s.txt"
-	err = SimplifiedChineseDict.LoadWith(file2, "=")
-	if err != nil {
-		log.Println(err)
-	}
+	//file2 := "../data/dictionary/tc/t2s.txt"
+	//err = SimplifiedChineseDict.LoadWith(file2, "=")
+	//if err != nil {
+	//	log.Println(err)
+	//}
 
 	// 分词词典，目前分词还有些问题，暂时先不处理
 	//Segmenter.LoadDictionary("../data/dictionary/dictionary.txt")
@@ -98,6 +98,7 @@ func main() {
 		Addr: port,
 	}
 	http.HandleFunc("/filter", filter)
+	log.Printf("Listen on: %v", port)
 	log.Fatal(srv.ListenAndServe())
 }
 
@@ -155,6 +156,6 @@ func filter(w http.ResponseWriter, r *http.Request) {
 	resp.Code = 100
 	resp.Message = "过滤成功"
 	resp.Result["filtered_content"] = res
-	resp.Result["segs"] = segs
+	//resp.Result["segs"] = segs
 	w.Write(resp.ToJson())
 }
