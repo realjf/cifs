@@ -30,6 +30,12 @@ func (swd *SensitiveWordDictionary) Filter(str string) string {
 	}
 
 	// 字典过滤
+	content := swd.dict.ParseText(str)
+	if content != nil {
+		//for _, v := range content.FrontAll() {
+		//
+		//}
+	}
 
 	return str
 }
