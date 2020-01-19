@@ -21,7 +21,7 @@ func TestNewSensitiveWordDictionary(t *testing.T) {
 			if v == nil {
 				continue
 			}
-			vv := v.(ahocorasick.Hit)
+			vv := v.(*ahocorasick.Hit)
 			s = strings.ReplaceAll(s, vv.Value().(string), "***")
 		}
 	}
